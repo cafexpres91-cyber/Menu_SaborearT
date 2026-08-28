@@ -27,7 +27,26 @@ body{font-family:Arial,sans-serif;background:#111;color:#fff}
 .single{transform-origin:left center;transition:transform .7s cubic-bezier(.2,.72,.2,1)}.single.turn{transform:rotateY(-180deg)}
 .controls{height:64px;display:flex;justify-content:center;align-items:center;gap:9px;background:#171717;border-top:1px solid #333}
 button{border:0;border-radius:9px;background:#292929;color:#fff;padding:10px 16px;cursor:pointer}button:disabled{opacity:.35;cursor:not-allowed}
-.hint{position:absolute;bottom:7px;color:#777;font-size:11px}@media(max-width:700px){header{height:48px;padding:0 12px}.controls{height:60px}#book{height:min(80vh,760px)}}
+.hint{position:absolute;bottom:7px;color:#777;font-size:11px}@media(max-width:700px){
+    header{
+        height:48px;
+        padding:0 12px;
+    }
+
+    .controls{
+        height:60px;
+    }
+
+    #book{
+        height:min(80vh,760px);
+        aspect-ratio:1448/2048;
+    }
+
+    .cover{
+        width:100%;
+        right:0;
+    }
+}
 </style></head><body><div id="app">
 <header><div class="title">Menú Digital</div><div id="counter">Cargando...</div></header>
 <main class="viewer"><div id="book"></div><div class="hint">Desliza o usa ← →</div></main>
