@@ -2,594 +2,121 @@
 <html lang="es">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#111">
 <title>Menú Digital</title>
-
 <style>
-*{box-sizing:border-box}
-
-html,body{
-  margin:0;
-  width:100%;
-  height:100%;
-  overflow:hidden;
-}
-
-body{
-  font-family:Arial,Helvetica,sans-serif;
-  background:#111;
-  color:#fff;
-}
-
-#app{
-  width:100%;
-  height:100%;
-  display:flex;
-  flex-direction:column;
-}
-
-header{
-  flex:0 0 54px;
-  height:54px;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  padding:0 18px;
-  background:#171717;
-  border-bottom:1px solid #333;
-}
-
-.title{
-  font-weight:700;
-  font-size:16px;
-}
-
-.counter{
-  font-size:14px;
-  color:#aaa;
-}
-
-.viewer{
-  position:relative;
-  flex:1 1 auto;
-  min-height:0;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  padding:12px;
-}
-
-/*
-  ESCRITORIO:
-  El libro abierto ocupa el ancho de DOS páginas.
-  La proporción es 2:1 respecto a una página.
-*/
-#book{
-  position:relative;
-  width:min(94vw, calc((100vh - 150px) * 1.414));
-  height:min(calc(100vh - 150px), 82vh);
-  aspect-ratio:2 / 1.414;
-  perspective:1800px;
-}
-
-/* Todas las páginas */
-.cover,
-.spread,
-.single{
-  position:absolute;
-  top:0;
-  left:0;
-  width:100%;
-  height:100%;
-  background:#fff;
-  overflow:hidden;
-  box-shadow:0 5px 28px rgba(0,0,0,.55);
-}
-
-/*
-  PORTADA:
-  En escritorio es una sola página, situada en el lado derecho
-  del libro, para que tenga el mismo tamaño que una página normal.
-*/
-.cover{
-  width:50%;
-  left:50%;
-  right:auto;
-  z-index:100;
-  transform-origin:left center;
-  backface-visibility:hidden;
-  transform-style:preserve-3d;
-  transition:transform .75s cubic-bezier(.2,.72,.2,1);
-}
-
-.cover.open{
-  transform:rotateY(-180deg);
-}
-
-.cover img,
-.side img,
-.single img{
-  width:100%;
-  height:100%;
-  display:block;
-  object-fit:contain;
-  background:#fff;
-  user-select:none;
-  -webkit-user-drag:none;
-}
-
-/* Pliego abierto */
-.spread{
-  display:flex;
-  gap:2px;
-  z-index:1;
-}
-
-.side{
-  flex:1 1 50%;
-  width:50%;
-  height:100%;
-  min-width:0;
-  overflow:hidden;
-  background:#fff;
-}
-
-.side.empty{
-  background:#fff;
-}
-
-/* Móvil */
-.single{
-  transform-origin:left center;
-  transform-style:preserve-3d;
-  transition:transform .7s cubic-bezier(.2,.72,.2,1);
-}
-
-.single.turn{
-  transform:rotateY(-180deg);
-}
-
-.controls{
-  flex:0 0 64px;
-  height:64px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  gap:9px;
-  background:#171717;
-  border-top:1px solid #333;
-  padding:6px;
-}
-
-button{
-  border:0;
-  border-radius:9px;
-  background:#292929;
-  color:#fff;
-  padding:10px 16px;
-  font-size:14px;
-  cursor:pointer;
-}
-
-button:hover{
-  background:#3a3a3a;
-}
-
-button:disabled{
-  opacity:.35;
-  cursor:not-allowed;
-}
-
-.hint{
-  position:absolute;
-  bottom:5px;
-  left:0;
-  right:0;
-  text-align:center;
-  color:#777;
-  font-size:11px;
-  pointer-events:none;
-}
-
-/*
-  MÓVIL:
-  Una sola página, siempre completa y centrada.
-  Nunca se usa el ancho del libro de escritorio.
-*/
+*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden}
+body{font-family:Arial,Helvetica,sans-serif;background:#111;color:#fff}
+#app{height:100%;display:flex;flex-direction:column}
+header{height:54px;flex:0 0 54px;display:flex;align-items:center;justify-content:space-between;padding:0 18px;background:#171717;border-bottom:1px solid #333}
+.title{font-weight:700}.counter{font-size:14px;color:#aaa}
+.viewer{position:relative;flex:1;min-height:0;display:flex;align-items:center;justify-content:center;padding:10px}
+#book{position:relative;width:min(94vw,calc((100vh - 150px)*1.414));height:min(calc(100vh - 150px),82vh);aspect-ratio:2/1.414;perspective:1800px}
+.spread,.single{position:absolute;inset:0;background:#fff;overflow:hidden;box-shadow:0 5px 28px rgba(0,0,0,.55);visibility:hidden;opacity:0}
+.spread{display:flex;gap:2px;z-index:1}.spread.active{visibility:visible;opacity:1}
+.side{width:50%;height:100%;overflow:hidden;background:#fff}
+.side img,.cover img,.single img{width:100%;height:100%;display:block;object-fit:contain;background:#fff;user-select:none;-webkit-user-drag:none}
+.cover{position:absolute;top:0;left:50%;width:50%;height:100%;background:#fff;overflow:hidden;box-shadow:0 5px 28px rgba(0,0,0,.55);z-index:100;transform-origin:left center;backface-visibility:hidden;transition:transform .72s cubic-bezier(.2,.72,.2,1)}
+.cover.open{transform:rotateY(-180deg)}
+.single.active{visibility:visible;opacity:1}
+.spread.turn-out,.single.turn-out{visibility:visible;opacity:1;z-index:50;transform-origin:left center;animation:turnOut .65s cubic-bezier(.2,.72,.2,1) forwards}
+@keyframes turnOut{from{transform:rotateY(0)}to{transform:rotateY(-180deg)}}
+.controls{height:64px;flex:0 0 64px;display:flex;align-items:center;justify-content:center;gap:9px;background:#171717;border-top:1px solid #333;padding:6px}
+button{border:0;border-radius:9px;background:#292929;color:#fff;padding:10px 16px;font-size:14px;cursor:pointer}
+button:hover{background:#3a3a3a}button:disabled{opacity:.35;cursor:not-allowed}
+.hint{position:absolute;bottom:4px;color:#777;font-size:11px;pointer-events:none}
 @media(max-width:700px){
-
-  header{
-    flex:0 0 50px;
-    height:50px;
-    padding:0 16px;
-  }
-
-  .title{
-    font-size:16px;
-  }
-
-  .counter{
-    font-size:14px;
-  }
-
-  .viewer{
-    padding:8px;
-  }
-
-  #book{
-    width:min(94vw, calc((100vh - 132px) * .707));
-    height:min(calc(100vh - 132px), 86vh);
-    aspect-ratio:1 / 1.414;
-  }
-
-  .cover{
-    width:100%;
-    left:0;
-    right:0;
-  }
-
-  .controls{
-    flex:0 0 66px;
-    height:66px;
-    gap:8px;
-  }
-
-  button{
-    padding:11px 15px;
-    font-size:14px;
-  }
-
-  .hint{
-    display:none;
-  }
+ header{height:50px;flex-basis:50px;padding:0 16px}.viewer{padding:8px}
+ #book{width:min(94vw,calc((100vh - 132px)*.707));height:min(calc(100vh - 132px),86vh);aspect-ratio:1/1.414}
+ .cover{left:0;width:100%;transform-origin:center center}
+ .controls{height:66px;flex-basis:66px;gap:8px}.hint{display:none}
 }
-
-/* Pantallas muy pequeñas */
-@media(max-width:380px){
-  .controls{
-    gap:5px;
-  }
-
-  button{
-    padding:10px 10px;
-    font-size:13px;
-  }
-}
+@media(max-width:380px){button{padding:10px;font-size:13px}}
 </style>
 </head>
-
 <body>
 <div id="app">
-
-<header>
-  <div class="title">Menú Digital</div>
-  <div id="counter" class="counter">Cargando...</div>
-</header>
-
-<main class="viewer">
-  <div id="book"></div>
-  <div class="hint">Desliza o usa ← →</div>
-</main>
-
-<footer class="controls">
-  <button id="prev">‹ Anterior</button>
-  <button id="fullscreen">Pantalla completa</button>
-  <button id="next">Siguiente ›</button>
-</footer>
-
+<header><div class="title">Menú Digital</div><div id="counter" class="counter">Cargando...</div></header>
+<main class="viewer"><div id="book"></div><div class="hint">Desliza o usa ← →</div></main>
+<footer class="controls"><button id="prev">‹ Anterior</button><button id="fullscreen">Pantalla completa</button><button id="next">Siguiente ›</button></footer>
 </div>
-
 <script>
-const book = document.getElementById('book');
-const counter = document.getElementById('counter');
-const prev = document.getElementById('prev');
-const next = document.getElementById('next');
-const fullscreen = document.getElementById('fullscreen');
+const book=document.getElementById('book'),counter=document.getElementById('counter'),prev=document.getElementById('prev'),next=document.getElementById('next'),fullscreen=document.getElementById('fullscreen');
+let files=[],mobile=false,position=0,cover=null,items=[],busy=false;
 
-let files = [];
-let mobile = false;
-let position = 0;
-let cover = null;
-let pages = [];
-
-/* Carga automáticamente los nombres desde paginas.json */
 async function init(){
-  try{
-    const response = await fetch('paginas.json?v=' + Date.now(), {
-      cache:'no-store'
-    });
-
-    if(!response.ok) throw new Error('No se pudo leer paginas.json');
-
-    const data = await response.json();
-
-    files = (data.paginas || [])
-      .filter(name => /^\d+\.png$/i.test(name))
-      .sort((a,b) => parseInt(a,10) - parseInt(b,10));
-
-    if(!files.length) throw new Error('No hay páginas');
-
-    build();
-  }catch(error){
-    counter.textContent = 'Sin páginas';
-    book.innerHTML =
-      '<div style="color:#aaa;padding:30px;text-align:center">' +
-      'No se encontraron páginas.' +
-      '</div>';
-  }
+ try{
+  const r=await fetch('paginas.json?v='+Date.now(),{cache:'no-store'});
+  if(!r.ok)throw 0;
+  const d=await r.json();
+  files=(d.paginas||[]).filter(x=>/^\d+\.png$/i.test(x)).sort((a,b)=>parseInt(a)-parseInt(b));
+  if(!files.length)throw 0;
+  build();
+ }catch(e){counter.textContent='Sin páginas'}
 }
-
-function createImage(file, number){
-  const img = document.createElement('img');
-  img.src = 'paginas/' + encodeURIComponent(file);
-  img.alt = 'Página ' + number;
-  img.draggable = false;
-  return img;
-}
+function img(file,n){const x=document.createElement('img');x.src='paginas/'+encodeURIComponent(file);x.alt='Página '+n;x.draggable=false;return x}
 
 function build(){
-
-  book.innerHTML = '';
-  pages = [];
-  position = 0;
-
-  mobile = window.innerWidth <= 700;
-
-  /* PORTADA */
-  cover = document.createElement('div');
-  cover.className = 'cover';
-  cover.appendChild(createImage(files[0],1));
-  book.appendChild(cover);
-
-  if(mobile){
-
-    /*
-      Móvil:
-      1 portada
-      2
-      3
-      4
-      5...
-    */
-    for(let i = 1; i < files.length; i++){
-
-      const page = document.createElement('div');
-
-      page.className = 'single';
-      page.style.zIndex = String(files.length - i);
-
-      page.appendChild(createImage(files[i], i + 1));
-
-      book.appendChild(page);
-      pages.push(page);
-    }
-
-  }else{
-
-    /*
-      Escritorio:
-      2-3
-      4-5
-      6-7
-      8-9
-      10-11
-      12-13
-      etc.
-
-      Si la última página queda sola:
-      12 | vacío
-    */
-    for(let i = 1; i < files.length; i += 2){
-
-      const spread = document.createElement('div');
-      spread.className = 'spread';
-
-      const left = document.createElement('div');
-      left.className = 'side';
-      left.appendChild(createImage(files[i], i + 1));
-
-      const right = document.createElement('div');
-      right.className = 'side';
-
-      if(files[i + 1]){
-        right.appendChild(createImage(files[i + 1], i + 2));
-      }else{
-        right.classList.add('empty');
-      }
-
-      spread.appendChild(left);
-      spread.appendChild(right);
-
-      book.appendChild(spread);
-      pages.push(spread);
-    }
+ book.innerHTML='';items=[];position=0;busy=false;mobile=innerWidth<=700;
+ cover=document.createElement('div');cover.className='cover';cover.appendChild(img(files[0],1));book.appendChild(cover);
+ if(mobile){
+  for(let i=1;i<files.length;i++){const p=document.createElement('div');p.className='single';p.style.zIndex=files.length-i;p.appendChild(img(files[i],i+1));book.appendChild(p);items.push(p)}
+ }else{
+  for(let i=1;i<files.length;i+=2){
+   const s=document.createElement('div');s.className='spread';
+   const l=document.createElement('div');l.className='side';l.appendChild(img(files[i],i+1));
+   const r=document.createElement('div');r.className='side';if(files[i+1])r.appendChild(img(files[i+1],i+2));
+   s.append(l,r);book.appendChild(s);items.push(s);
   }
-
-  update();
+  if(items[0])items[0].classList.add('active');
+ }
+ update();
 }
-
 function update(){
-
-  if(!files.length) return;
-
-  if(mobile){
-
-    counter.textContent =
-      'Página ' + (position + 1) +
-      ' de ' + files.length;
-
-    prev.disabled = position === 0;
-    next.disabled = position >= files.length - 1;
-
-  }else{
-
-    if(position === 0){
-
-      counter.textContent =
-        'Página 1 de ' + files.length;
-
-    }else{
-
-      const left = 2 + ((position - 1) * 2);
-      const right = Math.min(left + 1, files.length);
-
-      if(left === right){
-        counter.textContent =
-          'Página ' + left +
-          ' de ' + files.length;
-      }else{
-        counter.textContent =
-          'Páginas ' + left +
-          '–' + right +
-          ' de ' + files.length;
-      }
-    }
-
-    prev.disabled = position === 0;
-    next.disabled = position >= pages.length;
-  }
+ if(mobile){counter.textContent='Página '+(position+1)+' de '+files.length;prev.disabled=position===0;next.disabled=position>=files.length-1}
+ else{
+  if(position===0)counter.textContent='Página 1 de '+files.length;
+  else{const l=2+(position-1)*2,r=Math.min(l+1,files.length);counter.textContent=l===r?'Página '+l+' de '+files.length:'Páginas '+l+'–'+r+' de '+files.length}
+  prev.disabled=position===0;next.disabled=position>=items.length;
+ }
 }
-
+function afterAnimation(el,fn){
+ let done=false;
+ const finish=()=>{if(done)return;done=true;el.removeEventListener('animationend',finish);fn();busy=false};
+ el.addEventListener('animationend',finish);
+ setTimeout(finish,750);
+}
 function goNext(){
-
-  if(mobile){
-
-    if(position >= files.length - 1) return;
-
-    if(position === 0){
-      cover.classList.add('open');
-    }else{
-      pages[position - 1].classList.add('turn');
-    }
-
-    position++;
-
-  }else{
-
-    if(position >= pages.length) return;
-
-    if(position === 0){
-      cover.classList.add('open');
-    }
-
-    position++;
-  }
-
-  update();
+ if(busy)return;
+ if(mobile){
+  if(position>=files.length-1)return;busy=true;
+  if(position===0){cover.classList.add('open');afterAnimation(cover,()=>{position=1;update()})}
+  else{const old=items[position-1],n=position;old.classList.add('turn-out');afterAnimation(old,()=>{old.classList.remove('active','turn-out');position=n+1;items[n].classList.add('active');update()})}
+ }else{
+  if(position>=items.length)return;busy=true;
+  if(position===0){cover.classList.add('open');afterAnimation(cover,()=>{position=1;update()})}
+  else{const current=items[position-1],n=position;current.classList.add('turn-out');if(items[n])items[n].classList.add('active');afterAnimation(current,()=>{current.classList.remove('active','turn-out');position=n+1;update()})}
+ }
 }
-
-function goPrevious(){
-
-  if(mobile){
-
-    if(position === 0) return;
-
-    if(position === 1){
-
-      cover.classList.remove('open');
-
-    }else{
-
-      pages[position - 2].classList.remove('turn');
-
-    }
-
-    position--;
-
-  }else{
-
-    if(position === 0) return;
-
-    if(position === 1){
-      cover.classList.remove('open');
-    }
-
-    position--;
-  }
-
-  update();
+function goPrev(){
+ if(busy)return;
+ if(position===0)return;
+ if(mobile){
+  if(position===1){cover.classList.remove('open');position=0;update()}
+  else{items[position-1].classList.remove('active');items[position-2].classList.add('active');position--;update()}
+ }else{
+  if(position===1){cover.classList.remove('open');position=0;update()}
+  else{items[position-1].classList.remove('active');items[position-2].classList.add('active');position--;update()}
+ }
 }
-
-prev.addEventListener('click', goPrevious);
-next.addEventListener('click', goNext);
-
-/* Teclado */
-document.addEventListener('keydown', function(event){
-
-  if(event.key === 'ArrowRight'){
-    goNext();
-  }
-
-  if(event.key === 'ArrowLeft'){
-    goPrevious();
-  }
-});
-
-/* Deslizamiento */
-let touchStartX = 0;
-
-book.addEventListener('touchstart', function(event){
-  touchStartX = event.changedTouches[0].clientX;
-},{passive:true});
-
-book.addEventListener('touchend', function(event){
-
-  const touchEndX = event.changedTouches[0].clientX;
-  const distance = touchEndX - touchStartX;
-
-  if(Math.abs(distance) > 45){
-
-    if(distance < 0){
-      goNext();
-    }else{
-      goPrevious();
-    }
-  }
-
-},{passive:true});
-
-/* Pantalla completa */
-fullscreen.addEventListener('click', async function(){
-
-  try{
-
-    if(!document.fullscreenElement){
-
-      await document.documentElement.requestFullscreen();
-
-    }else{
-
-      await document.exitFullscreen();
-
-    }
-
-  }catch(error){
-    /* Algunos navegadores móviles no permiten fullscreen */
-  }
-});
-
-/*
-  Si se cambia de orientación o tamaño,
-  reconstruimos el visor para que cambie
-  correctamente entre modo móvil y escritorio.
-*/
-let lastMobile = window.innerWidth <= 700;
-
-window.addEventListener('resize', function(){
-
-  const currentMobile = window.innerWidth <= 700;
-
-  if(currentMobile !== lastMobile){
-
-    lastMobile = currentMobile;
-    build();
-
-  }
-});
-
+prev.onclick=goPrev;next.onclick=goNext;
+document.addEventListener('keydown',e=>{if(e.key==='ArrowRight')goNext();if(e.key==='ArrowLeft')goPrev()});
+let sx=0;book.addEventListener('touchstart',e=>sx=e.changedTouches[0].clientX,{passive:true});
+book.addEventListener('touchend',e=>{const dx=e.changedTouches[0].clientX-sx;if(Math.abs(dx)>45)(dx<0?goNext:goPrev)()},{passive:true});
+fullscreen.onclick=async()=>{try{if(!document.fullscreenElement)await document.documentElement.requestFullscreen();else await document.exitFullscreen()}catch(e){}};
+let lastMobile=innerWidth<=700;addEventListener('resize',()=>{const m=innerWidth<=700;if(m!==lastMobile){lastMobile=m;build()}});
 init();
 </script>
-
 </body>
 </html>
